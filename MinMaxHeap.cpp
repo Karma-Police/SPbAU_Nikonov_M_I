@@ -237,11 +237,7 @@ static void remove_max()
 
 int main()
 {
-//    assert(freopen("input.in", "r", stdin) != NULL);
-//    assert(freopen("myout.txt", "w", stdout) );
-
     int n; assert(scanf("%d", &n) == 1);
-	init_lvls(n);
     for (int i = 0; i < n; i++)
     {
         int x; assert(scanf("%d", &x) == 1);
