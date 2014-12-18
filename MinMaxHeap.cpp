@@ -14,8 +14,8 @@ using namespace std;
 
 const int MAXN = int(1e6);
 
-static int Heap[MAXN], lvl[MAXN];
-static int HeapSize= 0;
+static int Heap[MAXN], lvl[MAXN]; // lvl - depth of each heap position
+static int HeapSize = 0;
 
 
 
@@ -69,7 +69,7 @@ void TrickleDown(int pos)
 
 node get_nxt(MINMAX t, int cur, int depth)
 {
-    if (depth > 2 || cur > HeapSize) return node();
+    if (depth > 2 || cur > HeapSize) return node(); //too deep or no children
     int mult = 1;
     if (t == MAX) mult = -1;
     node res = min(get_nxt(t, cur * 2, depth + 1), get_nxt(t, cur * 2 + 1, depth + 1));
@@ -101,7 +101,7 @@ void TrickleDownMax(int pos)
     node nxt = get_nxt(MAX, pos);
     if (!nxt.exists) return;
 
-    if (lvl[nxt.id] - lvl[pos] == 2) {
+    if (lvl[nxt.id] - lvl[pos] == 2) { // is grandshild
         if (Heap[nxt.id] > Heap[pos]) {
             swap(Heap[nxt.id], Heap[pos]);
             if (Heap[nxt.id] < Heap[nxt.id / 2])
@@ -178,7 +178,17 @@ static void insert(int val)
     BubbleUp(HeapSize);
 }
 
-int get_min()
+static void init_lvls(int n)
+{
+	lvl[1] = 1;
+	for (int i = 2; i <= n; i++)
+	{
+		if (lvl[i - 1] == lvl[i / 2]) lvl[i] = lvl[i - 1] + 1;
+		else lvl[i] = lvl[i - 1];
+	}
+}
+
+static int get_min()
 {
     assert(HeapSize >= 1);
     return Heap[1];
@@ -231,6 +241,7 @@ int main()
 //    assert(freopen("myout.txt", "w", stdout) );
 
     int n; assert(scanf("%d", &n) == 1);
+	init_lvls(n);
     for (int i = 0; i < n; i++)
     {
         int x; assert(scanf("%d", &x) == 1);
